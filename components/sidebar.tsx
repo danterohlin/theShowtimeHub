@@ -43,12 +43,20 @@ export default function sidebar({ setCurrent, current, setShowsData, publicRunti
 
 
     return (
-        <div className="bg-slate-700 text-gray-200 w-1/6 py-4 px-4">
-            <p className={`whitespace-nowrap bg-slate-600 p-4 px-8 my-1 cursor-pointer hover:bg-slate-800 transition ${current == "All" && "bg-slate-500"}`} onClick={handleClick}>All</p>
-            <p className={`whitespace-nowrap bg-slate-600 p-4 px-8 my-1 cursor-pointer hover:bg-slate-800 transition ${current == "Trending" && "bg-slate-500"}`} onClick={handleClick}>Trending</p>
-            <p className={`whitespace-nowrap bg-slate-600 p-4 px-8 my-1 cursor-pointer hover:bg-slate-800 transition ${current == "Movies" && "bg-slate-500"}`} onClick={handleClick}>Movies</p>
-            <p className={`whitespace-nowrap bg-slate-600 p-4 px-8 my-1 cursor-pointer hover:bg-slate-800 transition ${current == "TV Shows" && "bg-slate-500"}`} onClick={handleClick}>TV Shows</p>
-            <p className={`whitespace-nowrap bg-slate-600 p-4 px-8 my-1 cursor-pointer hover:bg-slate-800 transition ${current == "Recommended" && "bg-slate-500"}`} onClick={handleClick}>Recommended</p>
+        <div className=" text-gray-200 w-1/6  z-10">
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "All" && " border-r-2 text-sky-400"}`} onClick={handleClick}>All</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Trending" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Trending</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Movies" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Movies</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "TV Shows" && " border-r-2 text-sky-400"}`} onClick={handleClick}>TV Shows</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Recommended" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Recommended</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Categories</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Top Rated</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Popular</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Oscar Nominated</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Most Viewed</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Relaxing</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Comedy</p>
+            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Top Rated Actors</p>
         </div>
     )
 }
