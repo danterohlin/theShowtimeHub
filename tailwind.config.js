@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require("tailwindcss/colors");
+const { rootCertificates } = require("tls");
 module.exports = {
 	content: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
 	theme: {
@@ -11,19 +12,70 @@ module.exports = {
 				},
 			},
 			animation: {
-				swave: "swave 100s linear infinite",
+				swave: "swave 30s linear infinite",
 			},
 			keyframes: {
 				swave: {
-					"0%": { transform: "translateY(110px)   translateX(400px) rotate(0deg)" },
-					"25%": {
-						transform: "translateY(120px)  translateX(500px) rotate(90deg)",
+					"0%": {
+						opacity: 0,
+						right: "20%",
+						top: "5%",
+						transform: "rotate(0deg)",
+					},
+					"10%": {
+						opacity: 0.5,
+						right: "55%",
+						top: "20%",
+					},
+					"20%": {
+						opacity: 0,
+						right: "20%",
+						top: "30%",
+						transform: "rotate(360deg)",
+					},
+					"30%": {
+						opacity: 0.9,
+						right: "55%",
+						top: "10%",
+					},
+					"40%": {
+						opacity: 0.1,
+						right: "20%",
+						top: "25%",
+						transform: "rotate(0deg)",
 					},
 					"50%": {
-						transform: "translateY(130px)  translateX(600px) rotate(180deg)",
+						opacity: 0,
+						right: "55%",
+						top: "0%",
+					},
+					"60%": {
+						opacity: 0.3,
+						right: "20%",
+						top: "15%",
+						transform: "rotate(360deg)",
+					},
+					"70%": {
+						opacity: 0,
+						right: "55%",
+						top: "5%",
+					},
+					"80%": {
+						opacity: 0.9,
+						right: "20%",
+						top: "30%",
+						transform: "rotate(0deg)",
+					},
+					"90%": {
+						opacity: 0.3,
+						right: "55%",
+						top: "20%",
 					},
 					"100%": {
-						transform: "translateY(120px)  translateX(500px) rotate(360deg)",
+						opacity: 0,
+						transform: "rotate(0deg)",
+						right: "20%",
+						top: "5%",
 					},
 				},
 			},

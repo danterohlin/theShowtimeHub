@@ -1,62 +1,64 @@
-export default function sidebar({ setCurrent, current, setShowsData, publicRuntimeConfig }: any) {
+import { useState } from "react";
+export default function sidebar({ setCurrent, current, setShowsData, apiKey, initialData, setContentType }: any) {
     const handleClick = async (e: any) => {
         let res, data;
-        switch (e.target.innerHTML) {
-            case "All":
-                res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${publicRuntimeConfig.apiKey}&page=2`);
-                data = await res.json();
-                console.log(data)
-                setShowsData(data.results)
+        switch (e.target.id) {
+            case "trending":
+                setShowsData(initialData)
+                setContentType("showsData")
                 break;
-            case "Trending":
-                res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${publicRuntimeConfig.apiKey}`);
+            case "movies":
+                res = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`);
                 data = await res.json();
                 setShowsData(data.results)
+                setContentType("showsData")
                 break;
-            case "Movies":
-                res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${publicRuntimeConfig.apiKey}`);
+            case "topMovies":
+                res = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`);
                 data = await res.json();
                 setShowsData(data.results)
+                setContentType("showsData")
                 break;
-            case "TV Shows":
-                res = await fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=${publicRuntimeConfig.apiKey}`);
+            case "categoriesMovies":
+                res = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`);
+                data = await res.json();
+                setShowsData([])
+                setContentType("categoryData")
+                break;
+            case "tvShows":
+                res = await fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=${apiKey}`);
                 data = await res.json();
                 setShowsData(data.results)
+                setContentType("showsData")
                 break;
-            case "Recommended":
-                res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${publicRuntimeConfig.apiKey}&page=4`);
-                data = await res.json();
-                setShowsData(data.results)
-                break;
-            default:
+            case "recommended":
+                setShowsData(initialData)
+                setContentType("showsData")
                 break;
         }
-        // if (current == e.target.innerHTML) {
-        //     return;
-        // } else {
-        //     const res = await fetch(`https://api.themoviedb.org/3/${e.target.innerHTML}/?api_key=${publicRuntimeConfig.apiKey}`);
-        //     const data = await res.json();
-        //     setShowsData(data)
-        // }
-        setCurrent(e.target.innerHTML)
+        if (current == e.target.id) {
+            e.target.classList.contains("drop-menu") && e.target.nextElementSibling.classList.toggle("collapsed")
+        } else {
+            e.target.classList.contains("drop-menu") && e.target.nextElementSibling.classList.remove("collapsed")
+            setCurrent(e.target.id)
+        }
+
     }
 
-
     return (
-        <div className=" text-gray-200 w-1/6  z-10">
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "All" && " border-r-2 text-sky-400"}`} onClick={handleClick}>All</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Trending" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Trending</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Movies" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Movies</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "TV Shows" && " border-r-2 text-sky-400"}`} onClick={handleClick}>TV Shows</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500 ${current == "Recommended" && " border-r-2 text-sky-400"}`} onClick={handleClick}>Recommended</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Categories</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Top Rated</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Popular</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Oscar Nominated</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Most Viewed</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Relaxing</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Comedy</p>
-            <p className={`whitespace-nowrap  p-4 px-6  cursor-pointer bg-slate-150 hover:bg-slate-150 hover:border-r-2 transition border-sky-500`}  >Top Rated Actors</p>
-        </div>
+        <div className="text-gray-200 w-1/6  z-10">
+            <p className={`whitespace-nowrap p-4 px-6 cursor-pointer  hover:text-gray-300 border-sky-500 ${current == "trending" && " text-sky-400 hover:text-sky-400"}`} onClick={handleClick} id="trending">Trending</p>
+            <p className={`whitespace-nowrap p-4 px-6 cursor-pointer hover:text-gray-300 border-sky-500 drop-menu ${current == "movies" && " text-sky-400 hover:text-sky-400"}`} onClick={handleClick} id="movies">Movies</p>
+            <div className="subMenuMovie transition-all duration-500 overflow-hidden linear max-h-32 px-6">
+                <p className={`whitespace-nowrap py-2 cursor-pointer hover:text-gray-300 pl-4 border-l border-sky-900 movies ${current == "topMovies" && " text-sky-400 hover:text-sky-400"}`} id="topMovies" onClick={handleClick}>Top Rated</p>
+                <p className={`whitespace-nowrap py-2 cursor-pointer hover:text-gray-300 pl-4 border-l border-sky-900 movies ${current == "categoriesMovies" && " text-sky-400 hover:text-sky-400"}`} id="categoriesMovies" onClick={handleClick}>Categories</p>
+            </div>
+            <p className={`whitespace-nowrap p-4 px-6 cursor-pointer hover:text-gray-300 border-sky-500 drop-menu ${current == "tvShows" && " text-sky-400 hover:text-sky-400"}`} onClick={handleClick} id="tvShows">TV Shows</p>
+            <div className="subMenuTV transition-all duration-500 overflow-hidden linear max-h-32 px-6">
+                <p className={`whitespace-nowrap py-2 cursor-pointer hover:text-gray-300 pl-4 border-l border-sky-900 tv ${current == "tvShowsTrending" && " text-sky-400 hover:text-sky-400"}`} id="tvShowsTrending" onClick={handleClick}>Trending</p>
+                <p className={`whitespace-nowrap py-2 cursor-pointer hover:text-gray-300 pl-4 border-l border-sky-900 tv ${current == "tvShowsCategories" && " text-sky-400 hover:text-sky-400"}`} id="tvShowsCategories" onClick={handleClick}>Categories</p>
+            </div>
+            <p className={`whitespace-nowrap p-4 px-6 cursor-pointer  hover:text-gray-300 border-sky-500 ${current == "recommended" && " text-sky-400 hover:text-sky-400"}`} onClick={handleClick} id="recommended">Recommended</p>
+        </div >
     )
 }

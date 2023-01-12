@@ -6,23 +6,21 @@ import Sidebar from '../components/sidebar'
 import Show from '../components/show'
 import ShowPage from '../components/showPage'
 import Header from '../components/header'
-import { stringify } from 'querystring'
+import Categories from '../components/categories'
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
-interface ShowType {
-  id: number,
-  title: string,
-  poster_path: string,
-  overview: string,
-  vote_average: number,
-  genres: string,
-}
+
 
 export default function Home(initialData: any) {
   const [showsData, setShowsData] = useState([])
-  const [showData, setShowData] = useState<ShowType>({ id: 0, title: "", poster_path: "", overview: "", vote_average: 0, genres: "" })
-  const [current, setCurrent] = useState("All")
+  const [show, setShow] = useState({})
+  const [current, setCurrent] = useState("trending")
+  const [contentType, setContentType] = useState("showsData")
+
+  const contentRouter = () => {
+
+  }
 
   useEffect(() => {
     setShowsData(initialData.trendingShowsData.results)
@@ -40,55 +38,43 @@ export default function Home(initialData: any) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
       </Head>
-      <div className='overflow-hidden'>
-        <Image src="https://cfcdn.apowersoft.info/astro/picwish/assets/index-fourth-bg.a19a2877.svg" width="1300" height="1100" className='absolute overflow-hidden translate-x-1/2 -translate-y-1/3 pointer-events-none opacity-30' alt="bg-img"></Image>
-      </div>
-      <Header setShowsData={setShowsData} publicRuntimeConfig={publicRuntimeConfig} initialData={initialData.trendingShowsData.results} />
+      <Image src="https://cfcdn.apowersoft.info/astro/picwish/assets/index-fourth-bg.a19a2877.svg" width="100" height="100" className=' absolute w-1/2 left-1/2 overflow-hidden pointer-events-none opacity-50' alt="bg-img"></Image>
+      <Image src="https://cfcdn.apowersoft.info/astro/picwish/assets/index-fourth-bg.a19a2877.svg" width="100" height="100" className=' absolute w-1/3 right-1/3 overflow-hidden pointer-events-none opacity-5' alt="bg-img"></Image>
+      <Header setShowsData={setShowsData} setContentType={setContentType} apiKey={publicRuntimeConfig.apiKey} initialData={initialData.trendingShowsData.results} setCurrent={setCurrent} />
       <div className=' bg-slate-900 from w-full'>
         <div className='flex  max-w-8xl m-auto'>
-          <Sidebar setCurrent={setCurrent} current={current} setShowsData={setShowsData} publicRuntimeConfig={publicRuntimeConfig} />
+          <Sidebar setCurrent={setCurrent} setContentType={setContentType} current={current} setShowsData={setShowsData} apiKey={publicRuntimeConfig.apiKey} initialData={initialData.trendingShowsData.results} />
           <main className="bg-slate-900 scrollbar-thin pr-2 scrollbar-thumb-sky-600 scrollbar-track-slate-700 h-[calc(100vh-68px)] w-full">
-            {/* <div className='bg-slate-900 flex p-4 pb-0'><p className='cursor-pointer text-white font-medium bg-sky-600 px-2 flex-shrink rounded'>{current}</p></div> */}
             <div className='flex flex-wrap p-2 '>
-              {showsData.length > 1 ? showsData.map((show: any, i) => {
-                if (!show.poster_path) {
-                  return;
-                } else {
-                  return (
-                    <Show
-                      index={show.id}
-                      title={show.title}
-                      poster_path={show.poster_path}
-                      overview={show.overview}
-                      rating={show.vote_average}
-                      genre_ids={show.genre_ids}
-                      media_type={show.media_type}
-                      genres={initialData.genreData.genres}
-                      key={i}
-                      publicRuntimeConfig={publicRuntimeConfig}
-                      setShowData={setShowData}
-                      setShowsData={setShowsData}
-                    />
-                  )
-                }
-
-              }) :
+              {contentType == "showsData" &&
+                showsData.map((show: any, i) => {
+                  if (!show.poster_path) {
+                    return;
+                  } else {
+                    return (
+                      <Show
+                        data={show}
+                        genres={initialData.genreData.genres}
+                        setShow={setShow}
+                        setContentType={setContentType}
+                        key={i}
+                      />
+                    )
+                  }
+                })
+              }
+              {contentType == "showData" &&
                 <ShowPage
-                  index={showData.id}
-                  title={showData.title}
-                  poster_path={showData.poster_path}
-                  overview={showData.overview}
-                  rating={showData.vote_average}
-                  genres={showData.genres}
-                  key={showData.id}
-                  publicRuntimeConfig={publicRuntimeConfig}
+                  show={show}
+                  genres={initialData.genreData.genres}
+                  apiKey={publicRuntimeConfig.apiKey}
                 />
               }
-
+              {contentType == "categoryData" &&
+                <Categories apiKey={publicRuntimeConfig.apiKey} />
+              }
             </div>
-
           </main>
-
         </div>
       </div>
     </>
@@ -96,7 +82,7 @@ export default function Home(initialData: any) {
 }
 
 export async function getServerSideProps() {
-  const trendingShowsData = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${serverRuntimeConfig.apiKey}`)
+  const trendingShowsData = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${serverRuntimeConfig.apiKey}`)
     .then(response => response)
     .then(data => { return data.json() })
   const genreData = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${serverRuntimeConfig.apiKey}&language=en-US`)

@@ -5,7 +5,7 @@ interface Form {
     searchTerm: string;
 }
 
-export default function header({ setShowsData, publicRuntimeConfig, initialData }: any) {
+export default function header({ setShowsData, apiKey, initialData, setCurrent, setContentType }: any) {
     const [formInput, setFormInput] = useState<Form>({ searchTerm: "" })
     const [searchTerm, setSearchTerm] = useState('')
     const handleInput = (event: any) => {
@@ -19,12 +19,14 @@ export default function header({ setShowsData, publicRuntimeConfig, initialData 
             setShowsData(initialData)
             return;
         }
-        let res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${publicRuntimeConfig.apiKey}&query=${formInput.searchTerm}&language=en-US&page=1&include_adult=false`)
+        let res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${formInput.searchTerm}&language=en-US&page=1&include_adult=false`)
         let data = await res.json();
         setShowsData(data.results)
     }
     const reset = async (event: any) => {
         setShowsData(initialData)
+        setCurrent("trending")
+        setContentType("showsData")
     }
     return (
         <div className='bg-slate-900 w-full  z-10'>
