@@ -11,6 +11,9 @@ module.exports = {
 					250: "#1e59855c",
 				},
 			},
+			maxWidth: {
+				"8xl": "90rem",
+			},
 			animation: {
 				swave: "swave 30s linear infinite",
 			},
@@ -79,9 +82,6 @@ module.exports = {
 					},
 				},
 			},
-		},
-		maxWidth: {
-			"8xl": "90rem",
 		},
 		fontFamily: {
 			nunito: ["Nunito", "sans-serif", "arial"],

@@ -1,26 +1,19 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import getConfig from 'next/config'
 import Sidebar from '../components/sidebar'
 import Show from '../components/show'
 import ShowPage from '../components/showPage'
 import Header from '../components/header'
 import Categories from '../components/categories'
 
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
-
-
-export default function Home(initialData: any) {
+export default function Home(initialData) {
   const [showsData, setShowsData] = useState([])
   const [show, setShow] = useState({})
   const [current, setCurrent] = useState("trending")
   const [contentType, setContentType] = useState("showsData")
-
-  const contentRouter = () => {
-
-  }
+  const [categoriesType, setCategoriesType] = useState({})
 
   useEffect(() => {
     setShowsData(initialData.trendingShowsData.results)
@@ -40,10 +33,10 @@ export default function Home(initialData: any) {
       </Head>
       <Image src="https://cfcdn.apowersoft.info/astro/picwish/assets/index-fourth-bg.a19a2877.svg" width="100" height="100" className=' absolute w-1/2 left-1/2 overflow-hidden pointer-events-none opacity-50' alt="bg-img"></Image>
       <Image src="https://cfcdn.apowersoft.info/astro/picwish/assets/index-fourth-bg.a19a2877.svg" width="100" height="100" className=' absolute w-1/3 right-1/3 overflow-hidden pointer-events-none opacity-5' alt="bg-img"></Image>
-      <Header setShowsData={setShowsData} setContentType={setContentType} apiKey={publicRuntimeConfig.apiKey} initialData={initialData.trendingShowsData.results} setCurrent={setCurrent} />
+      <Header setShowsData={setShowsData} setContentType={setContentType} initialData={initialData.trendingShowsData.results} setCurrent={setCurrent} />
       <div className=' bg-slate-900 from w-full'>
         <div className='flex  max-w-8xl m-auto'>
-          <Sidebar setCurrent={setCurrent} setContentType={setContentType} current={current} setShowsData={setShowsData} apiKey={publicRuntimeConfig.apiKey} initialData={initialData.trendingShowsData.results} />
+          <Sidebar setCurrent={setCurrent} setContentType={setContentType} setCategoriesType={setCategoriesType} current={current} setShowsData={setShowsData} initialData={initialData.trendingShowsData.results} />
           <main className="bg-slate-900 scrollbar-thin pr-2 scrollbar-thumb-sky-600 scrollbar-track-slate-700 h-[calc(100vh-68px)] w-full">
             <div className='flex flex-wrap p-2 '>
               {contentType == "showsData" &&
@@ -67,11 +60,10 @@ export default function Home(initialData: any) {
                 <ShowPage
                   show={show}
                   genres={initialData.genreData.genres}
-                  apiKey={publicRuntimeConfig.apiKey}
                 />
               }
               {contentType == "categoryData" &&
-                <Categories apiKey={publicRuntimeConfig.apiKey} />
+                <Categories categoriesType={categoriesType} setShowsData={setShowsData} setContentType={setContentType} />
               }
             </div>
           </main>
@@ -82,13 +74,13 @@ export default function Home(initialData: any) {
 }
 
 export async function getServerSideProps() {
-  const trendingShowsData = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${serverRuntimeConfig.apiKey}`)
+  const trendingShowsData = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.API_KEY}`)
     .then(response => response)
     .then(data => { return data.json() })
-  const genreData = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${serverRuntimeConfig.apiKey}&language=en-US`)
+  const genreData = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.API_KEY}&language=en-US`)
     .then(response => response)
     .then(data => { return data.json() })
   return {
-    props: { trendingShowsData: trendingShowsData, genreData: genreData },
+    props: { trendingShowsData, genreData },
   }
 }

@@ -1,13 +1,18 @@
 import { useState } from "react"
 import Image from 'next/image'
+import { useContext } from 'react';
+import { UserContext } from '../lib/userContext';
+
 
 interface Form {
     searchTerm: string;
 }
 
-export default function header({ setShowsData, apiKey, initialData, setCurrent, setContentType }: any) {
+export default function header({ setShowsData, initialData, setCurrent, setContentType }: any) {
     const [formInput, setFormInput] = useState<Form>({ searchTerm: "" })
     const [searchTerm, setSearchTerm] = useState('')
+    const [user] = useContext(UserContext);
+
     const handleInput = (event: any) => {
         let { name, value } = event.target
         setFormInput({ ...formInput, [name]: value })
@@ -19,9 +24,10 @@ export default function header({ setShowsData, apiKey, initialData, setCurrent, 
             setShowsData(initialData)
             return;
         }
-        let res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${formInput.searchTerm}&language=en-US&page=1&include_adult=false`)
+        let res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${formInput.searchTerm}&language=en-US&page=1&include_adult=false`)
         let data = await res.json();
         setShowsData(data.results)
+        setContentType("showsData")
     }
     const reset = async (event: any) => {
         setShowsData(initialData)
@@ -40,7 +46,7 @@ export default function header({ setShowsData, apiKey, initialData, setCurrent, 
                         </svg>
                     </button>
                 </form>
-                <div className="w-1/3"></div>
+                <div className="w-1/3 text-right">{user ? <a className="border px-4 py-1 border-slate-250 rounded-2xl" href="/profile">Profile</a> : <a className="border px-4 py-1 border-slate-250 rounded-2xl" href="/login">Login / Signup</a>}</div>
             </div>
         </div >
     )
