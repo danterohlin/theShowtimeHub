@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import Router, { useRouter } from "next/router";
 import { magic } from "../lib/magic";
-import { UserContext } from "../lib/userContext";
+import { UserContext } from "../lib/authContext";
 import Loading from "../components/loading";
 
 const Callback = () => {

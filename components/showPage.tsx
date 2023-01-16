@@ -14,7 +14,6 @@ export default function showPage({ show }: any) {
     }
     const IMAGES_API = 'https://image.tmdb.org/t/p/w500/'
     const [data, setData] = useState<ShowType>({ id: 0, title: "", name: "", poster_path: "", overview: "", vote_average: 0, genres: [], media_type: "", vote_count: 0 })
-    console.log(process.env.API_KEY)
     const getShow = async () => {
         let res = await fetch(`https://api.themoviedb.org/3/${show.media_type ? show.media_type : "movie"}/${show.id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`)
         let data = await res.json()
@@ -27,7 +26,7 @@ export default function showPage({ show }: any) {
         <div className="movie relative p-2 border-slate-250 pb-2 overflow-hidden flex justify-between w-full" key={data.id}>
             <div className=" text-gray-300 pr-8 p-4 flex flex-col ">
                 <h4 className="text-md font-bold text-xl pb-2">{data.title ? data.title : data.name}</h4>
-                <p className="text-sm pr-10 bg-slate-150 p-4 my-4">{data.overview}</p>
+                <p className="text-sm pr-10 p-4 my-4">{data.overview}</p>
                 <div className="text-sm flex flex-wrap pl-2 pt-4">
                     {data.genres && data.genres.map((e: any) => {
                         return (<p className="pr-2" key={e.id}>[ {e.name} ]</p>)

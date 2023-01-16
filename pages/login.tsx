@@ -1,75 +1,36 @@
-import { useState, useEffect, useContext } from 'react';
-import Router from 'next/router';
-import { magic } from '../lib/magic';
-import { UserContext } from '../lib/userContext';
-import EmailForm from '../components/emailForm';
-import SocialLogins from '../components/socialLogins';
+import Head from 'next/head'
+import { useContext, useState } from 'react'
+import AuthContext from '../lib/authContext'
 
-const Login = () => {
-    const [disabled, setDisabled] = useState(false);
-    const [user, setUser] = useContext(UserContext);
+export default function Login() {
 
-    // Redirec to /profile if the user is logged in
-    useEffect(() => {
-        user?.issuer && Router.push('/');
-    }, [user]);
+    const [email, setEmail] = useState("")
+    const { loginUser } = useContext(AuthContext)
 
-    async function handleLoginWithEmail(email) {
-        try {
-            setDisabled(true); // disable login button to prevent multiple emails from being triggered
-
-            // Trigger Magic link to be sent to user
-            let didToken = await magic.auth.loginWithMagicLink({
-                email,
-                redirectURI: new URL('/callback', window.location.origin).href, // optional redirect back to your app after magic link is clicked
-            });
-
-            // Validate didToken with server
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + didToken,
-                },
-            });
-
-            if (res.status === 200) {
-                // Set the UserContext to the now logged in user
-                let userMetadata = await magic.user.getMetadata();
-                await setUser(userMetadata);
-                Router.push('/');
-            }
-        } catch (error) {
-            setDisabled(false); // re-enable login button - user may have requested to edit their email
-            console.log(error);
-        }
-    }
-
-    async function handleLoginWithSocial(provider) {
-        await magic.oauth.loginWithRedirect({
-            provider, // google, apple, etc
-            redirectURI: new URL('/callback', window.location.origin).href, // required redirect to finish social login
-        });
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        loginUser(email)
     }
 
     return (
-        <div className='login'>
-            <EmailForm disabled={disabled} onEmailSubmit={handleLoginWithEmail} />
-            <SocialLogins onSubmit={handleLoginWithSocial} />
-            <style jsx>{`
-        .login {
-          max-width: 20rem;
-          margin: 40px auto 0;
-          padding: 1rem;
-          border: 1px solid #dfe1e5;
-          border-radius: 4px;
-          text-align: center;
-          box-shadow: 0px 0px 6px 6px #f7f7f7;
-          box-sizing: border-box;
-        }
-      `}</style>
+        <div className="bg-slate-900 h-screen text-gray-100">
+            <Head>
+                <title>Login</title>
+                <meta name="description" content="Login here to make your purchase"></meta>
+            </Head>
+            <div className="h-full flex justify-center flex-col items-center">
+                <h2 className="pb-4 text-xl">Login</h2>
+                <form onSubmit={handleSubmit} className="flex">
+                    <input
+                        className="bg-transparent bg-slate-700 focus:outline-0 rounded-l-xl px-4 py-1"
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="Enter email.."
+                    />
+                    <button className="btn px-6 py-2.5 bg-gradient-to-l from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-600 text-white font-medium text-xs leading-tight uppercase rounded-r-xl shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-sky-800 active:shadow-lg transition duration-150 ease-in-out flex items-center">Submit</button>
+                </form>
+            </div>
         </div>
-    );
-};
-
-export default Login;
+    )
+}

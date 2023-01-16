@@ -1,7 +1,6 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import Image from 'next/image'
-import { useContext } from 'react';
-import { UserContext } from '../lib/userContext';
+import authContext from '../lib/authContext';
 
 
 interface Form {
@@ -11,7 +10,7 @@ interface Form {
 export default function header({ setShowsData, initialData, setCurrent, setContentType }: any) {
     const [formInput, setFormInput] = useState<Form>({ searchTerm: "" })
     const [searchTerm, setSearchTerm] = useState('')
-    const [user] = useContext(UserContext);
+    const { user, logoutUser } = useContext(authContext)
 
     const handleInput = (event: any) => {
         let { name, value } = event.target
@@ -29,15 +28,19 @@ export default function header({ setShowsData, initialData, setCurrent, setConte
         setShowsData(data.results)
         setContentType("showsData")
     }
-    const reset = async (event: any) => {
+    const reset = async () => {
         setShowsData(initialData)
         setCurrent("trending")
         setContentType("showsData")
     }
+    const account = async () => {
+        setCurrent("account")
+        setContentType("account")
+    }
     return (
-        <div className='bg-slate-900 w-full  z-10'>
+        <div className='bg-zinc-900 w-full  z-10'>
             <div className="flex flex justify-between px-6 max-w-8xl m-auto items-center text-white">
-                <div className="w-1/3 flex"> <div onClick={reset} className="tracking-widest bg-slate-900 rounded text-2xl font-bold cursor-pointer font-nunito inline-block"><div className="flex"><Image width="40" height="30" alt="playNextLogo" src="/pnlogo.png" /><span className="pl-2">BTV</span></div></div></div>
+                <div className="w-1/3 flex"> <div onClick={reset} className="tracking-widest rounded text-2xl font-bold cursor-pointer font-nunito inline-block"><div className="flex"><Image width="40" height="30" alt="playNextLogo" src="/pnlogo.png" /><span className="pl-2">BTV</span></div></div></div>
                 <form onSubmit={search} className="flex p-4 w-1/3">
                     <input className="search bg-transparent bg-slate-700 w-96 focus:outline-0 rounded-l-xl px-4 py-1" placeholder="Search" name="searchTerm" type="text" value={searchTerm} onChange={handleInput} />
                     <button className="btn inline-block px-6 py-2.5 bg-gradient-to-l from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-600 text-white font-medium text-xs leading-tight uppercase rounded-r-xl shadow-md  hover:shadow-lg focus:bg-blue-700  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-sky-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" id="button-addon2" type="submit">
@@ -46,7 +49,7 @@ export default function header({ setShowsData, initialData, setCurrent, setConte
                         </svg>
                     </button>
                 </form>
-                <div className="w-1/3 text-right">{user ? <a className="border px-4 py-1 border-slate-250 rounded-2xl" href="/profile">Profile</a> : <a className="border px-4 py-1 border-slate-250 rounded-2xl" href="/login">Login / Signup</a>}</div>
+                <div className="w-1/3 text-right">{user ? <div><a className="border px-4 py-1 border-sky-800 rounded-2xl text-gray-200 hover:text-gray-300 hover:border-sky-900 transition cursor-pointer" onClick={account}>Profile</a></div> : <a className="border px-4 py-1 border-slate-250 rounded-2xl" href="/login">Login / Signup</a>}</div>
             </div>
         </div >
     )

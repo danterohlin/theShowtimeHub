@@ -10,6 +10,9 @@ module.exports = {
 					150: "#1c283c52",
 					250: "#1e59855c",
 				},
+				zinc: {
+					1000: "rgb(16 16 18)",
+				},
 			},
 			maxWidth: {
 				"8xl": "90rem",
