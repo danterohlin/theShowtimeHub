@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useContext, useState } from "react";
 import AuthContext from "../lib/authContext";
-import Router from "next/router";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +9,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     loginUser(email);
+
   };
 
   return (
@@ -22,7 +22,7 @@ export default function Login() {
         ></meta>
       </Head>
       <div className="h-full flex justify-center flex-col items-center">
-        <h2 className="pb-4 text-xl">Login</h2>
+        <h2 className="pb-4 text-xl">Login without registration</h2>
         <form onSubmit={handleSubmit} className="flex">
           <input
             className="bg-transparent bg-slate-700 focus:outline-0 rounded-l-xl px-4 py-1"

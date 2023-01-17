@@ -1,13 +1,12 @@
 import { createContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { Magic } from "magic-sdk";
+import Router from "next/router"
 
 const AuthContext = createContext();
 
 let magic;
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null); // Change null to {email} to see if it works
-  const router = useRouter();
 
   /**
    * Adds email to user
@@ -16,22 +15,25 @@ export const AuthProvider = (props) => {
   const loginUser = async (email) => {
     try {
       await magic.auth.loginWithMagicLink({ email });
+      const { issuer } = await magic.user.getMetadata();
       setUser({ email, issuer });
-      router.push("/");
+      Router.push("/")
+      return { 200: "success" }
     } catch (err) {
       setUser(null);
+      return { 404: err }
     }
   };
 
   /**
    * Sets the user to null
    */
-  const logoutUser = async () => {
+  const logoutUser = async (setContentType) => {
     try {
       await magic.user.logout();
       setUser(null);
-      router.push("/");
-    } catch (err) {}
+      return { "status": 200 }
+    } catch (err) { return { "status": err } }
   };
 
   const checkUserLoggedIn = async () => {
@@ -45,7 +47,7 @@ export const AuthProvider = (props) => {
         // just for testing
         const token = await getToken();
       }
-    } catch (err) {}
+    } catch (err) { }
   };
 
   /**
@@ -57,7 +59,7 @@ export const AuthProvider = (props) => {
     try {
       const token = await magic.user.getIdToken();
       return token;
-    } catch (err) {}
+    } catch (err) { }
   };
 
   useEffect(() => {

@@ -17,9 +17,7 @@ export default function Home(initialData) {
 
   useEffect(() => {
     setShowsData(initialData.trendingShowsData.results);
-    console.log(showsData);
   }, [initialData]);
-
   return (
     <>
       <Header
@@ -67,7 +65,7 @@ export default function Home(initialData) {
                   setContentType={setContentType}
                 />
               )}
-              {contentType == "account" && <Account />}
+              {contentType == "account" && (<Account setContentType={setContentType} />)}
             </div>
           </main>
         </div>

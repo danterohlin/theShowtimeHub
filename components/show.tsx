@@ -39,7 +39,6 @@ export default function show({ data, genres, setShow, setContentType }: any) {
       }
     );
     res = await res.json();
-    console.log(res);
     setAlreadySaved(true);
     fetchSaved(user);
   };
@@ -51,13 +50,11 @@ export default function show({ data, genres, setShow, setContentType }: any) {
         method: "POST",
         body: JSON.stringify({
           showId: data.id,
-          showTitle: data.title ? data.title : data.name,
           userId: user.issuer,
         }),
       }
     );
     res = await res.json();
-    console.log(res);
     setAlreadySaved(false);
     fetchSaved(user);
   };
@@ -70,7 +67,6 @@ export default function show({ data, genres, setShow, setContentType }: any) {
 
   useEffect(() => {
     checkList();
-    console.log(saved);
   }, [saved]);
 
   return (
@@ -100,7 +96,7 @@ export default function show({ data, genres, setShow, setContentType }: any) {
           <p className="px-4 pb-2">
             {data.media_type &&
               data.media_type.charAt(0).toUpperCase() +
-                data.media_type.slice(1)}
+              data.media_type.slice(1)}
           </p>
           <div className="text-xs flex flex-wrap px-4 pb-2">
             {genres.map((e: any) => {

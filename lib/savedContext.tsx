@@ -18,7 +18,7 @@ export const SavedProvider = (props) => {
         }
     }
     return (
-        <SavedContext.Provider value={{ fetchSaved, saved }}>
+        <SavedContext.Provider value={{ fetchSaved, saved, setSaved }}>
             {props.children}
         </SavedContext.Provider>
     );

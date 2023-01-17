@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import Image from "next/image";
 import authContext from "../lib/authContext";
+import { useRouter } from "next/router";
 
 interface Form {
   searchTerm: string;
@@ -15,6 +16,7 @@ export default function header({
   const [formInput, setFormInput] = useState<Form>({ searchTerm: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useContext(authContext);
+  const router = useRouter();
 
   const handleInput = (event: any) => {
     let { name, value } = event.target;

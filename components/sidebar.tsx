@@ -1,4 +1,3 @@
-import { useState } from "react";
 export default function sidebar({ setCurrent, current, setShowsData, initialData, setContentType, setCategoriesType }: any) {
     const handleClick = async (e: any) => {
         let res, data;

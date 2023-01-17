@@ -2,38 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../lib/authContext";
 import SavedContext from "../lib/savedContext";
 import Link from "next/link";
-import Image from "next/image";
-
-// const savedShows = (user) => {
-//   const [shows, setShows] = useState([]);
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     const fetchSaved = async () => {
-//       if (user) {
-//         try {
-//           setLoading(true);
-//           const res = await fetch(
-//             `http://localhost:3000/api/saved/shows/${user.issuer}`
-//           );
-//           const data = await res.json();
-//           setShows(data);
-//         } catch (err) {
-//           setShows([]);
-//         }
-//         setLoading(false);
-//       }
-//     };
-//     fetchSaved();
-//   }, [user]);
-
-//   return { shows, loading };
-// };
-
-export default function accoount() {
+export default function account({ setContentType }) {
   const { user, logoutUser } = useContext(AuthContext);
-  const [show, setShow] = useState({});
-  const { fetchSaved, saved } = useContext(SavedContext);
+  const { fetchSaved, saved, setSaved } = useContext(SavedContext);
   const IMAGES_API = "https://image.tmdb.org/t/p/w500/";
 
   const removeShow = async (show) => {
@@ -42,16 +13,25 @@ export default function accoount() {
       {
         method: "POST",
         body: JSON.stringify({
-          showId: show.id,
+          showId: show.showId,
           showTitle: show.title ? show.title : show.name,
           userId: user.issuer,
         }),
       }
     );
+
     res = await res.json();
-    console.log(res);
     fetchSaved(user);
   };
+
+  const logout = async () => {
+    let res = await logoutUser();
+    let result = await res
+    if (result.status === 200) {
+      setContentType("showsData")
+      setSaved([])
+    }
+  }
 
   return (
     <>
@@ -59,13 +39,13 @@ export default function accoount() {
         <p className="p-10 h-screen text-gray-100">Loading..</p>
       ) : (
         <>
-          <div className="text-gray-100">
+          <div className="text-gray-100 w-full">
             <div className="flex justify-end items-center">
               <div className="flex flex-col p-4">
                 <div className="profile-info">{user.email}</div>
               </div>
               <div className="">
-                <Link className="pr-6" href="#" onClick={logoutUser}>
+                <Link className="pr-6 text-sky-700" href="" onClick={logout}>
                   Logout
                 </Link>
               </div>
